@@ -1,0 +1,133 @@
+#include "pseudospectral.h"
+
+/* functions needed for calculating approxMatrix */
+
+DVector calculate_nodes(double tau, // time delay parameter
+                        int n       // dimention
+) {
+  DVector s(n);
+  const double step = M_PI / double(n-1);
+  for (int i = 0; i < n; i++)
+    s[i] = tau / 2. * (cos(double(i) * step) - 1.);
+  return s;
+}
+
+DVector calculate_c(const DVector &s, // chebyshev nodes
+                    int n             // dimention
+) {
+  DVector c(n);
+  for (int i = 0; i < n; i++) {
+    c[i] = 1.;
+    for (int j = 0; j < n; j++) {
+      if (j != i)
+        c[i] *= (s[i] - s[j]);
+    }
+  }
+  return c;
+}
+
+/* computing approxMatrix */
+
+DMatrix compute_approxMatrix( double tau, int n, string filename) 
+{
+  DMatrix M(n, n);
+
+  DVector s = calculate_nodes(tau, n);
+  DVector c = calculate_c(s, n);
+
+  for (int i = 0; i < n; i++) {
+    double tmp = 0.;
+    for (int j = 0; j < n; j++) {
+      if (i != j) {
+        double val = c[i] / (c[j] * (s[i] - s[j]));
+        M[i][j] = val;
+        tmp -= val;
+      }
+    }
+    M[i][i] = tmp;
+  }
+  if (filename.compare("")) {
+    std::ofstream out(filename);
+    for (int i = 0; i < n; i++)
+      out << M[i] << "\n";
+    out.close();
+  }
+  return M;
+}
+
+
+
+
+void plot_chebyshev_nodes(int N, double tau,
+                          const char* output = "images/chebyshev_nodes.pdf")
+{
+    FILE* f = popen("gnuplot", "w");
+    if (!f)
+        throw std::runtime_error("popen failed");
+
+    auto gp = [&](const char* fmt, auto... args)
+    {
+        std::fprintf(f, fmt, args...);
+    };
+
+    // terminal & output
+    gp("set terminal pdfcairo enhanced color font 'Palatino,15' size 14cm,9cm\n");
+    gp("set output '%s'\n", output);
+
+    // appearance
+    gp("set style line 1 lc rgb '#2166AC' lw 2.2 dt 1\n");
+    gp("set style line 2 lc rgb '#D73027' pt 7 ps 1.4\n");
+    gp("set style line 3 lc rgb '#DDDDDD' lt 1 lw 0.4\n");
+
+    gp("set grid ls 3\n");
+    gp("set border lw 1.2\n");
+    gp("set tics nomirror out\n");
+    gp("set key off\n");
+
+    gp("set xlabel 'k' font 'Palatino,15' offset 0,-0.5\n");
+    gp("set ylabel 's_k' font 'Palatino,15' offset -0.5,0\n");
+
+    // variables
+    gp("tau = %.17g\n", tau);
+    gp("N   = %d\n", N);
+    gp("s(x) = tau/2.0 * (cos(pi*x/N) - 1.0)\n");
+    gp("set xrange [-0.5 : N+0.5]\n");
+
+    // data block
+    std::string data;
+    char buf[128];
+
+    for (int k = 0; k <= N; ++k)
+    {
+        double sk = tau / 2.0 * (std::cos(k * M_PI / N) - 1.0);
+        std::snprintf(buf, sizeof(buf), "%d %.17g\n", k, sk);
+        data += buf;
+    }
+
+    gp("$nodes << EOD\n%sEOD\n", data.c_str());
+
+    // labels
+    gp("set label 1 's_0 = 0' at 0, s(0) left offset 1,-1 font 'Palatino,13' tc ls 2\n");
+    gp("set label 2 '-{/Symbol t} = s_N' at N, s(N) right offset -0.4,1.25 font 'Palatino,13' tc ls 2\n");
+
+    int id = 3;
+    for (int k = 1; k < N; ++k)
+    {
+        double sk = tau / 2.0 * (std::cos(k * M_PI / N) - 1.0);
+
+        double xoff = (k == 1 || k == N - 1) ? 0.0 : 0.5;
+        double yoff = (k == 1) ? -1.6 : 1.3;
+
+        gp("set label %d '%.4f' at %d, %.17g center offset %.1f, %.1f "
+           "font 'Palatino,12' tc rgb '#555555'\n",
+           id++, sk, k, sk, xoff, yoff);
+    }
+
+    // plot
+    gp("plot [0:N] "
+       "s(x) w l ls 1, "
+       "$nodes u 1:2 w p ls 2\n");
+
+    std::fflush(f);
+    pclose(f);
+}
