@@ -71,7 +71,6 @@ std::vector<DVector> iteratePoincare(const std::vector<DVector> &pts,
       all.push_back(p);
     }
   }
-  // std::cout << " all: " << all << std::endl;
   return all;
 }
 
@@ -196,7 +195,6 @@ void plotDiagram(DPoincareMap &pm,
   auto maxSpan = std::max(hi[0] - lo[0],hi[1] - lo[1]);
   double h = maxSpan / 8;
 
-  std::cout << "here\n";
   FILE *gp = popen("gnuplot -persistent", "w");
   fprintf(gp, "set terminal qt enhanced\n");
   fprintf(gp, "set palette defined (0 'blue',1 'cyan',2 'green',3 'yellow',4 "
@@ -240,12 +238,12 @@ void plotDiagram(DPoincareMap &pm,
 }
 
 
-void plotForLatex(DPoincareMap &pm,
+void plotAttractor(DPoincareMap &pm,
                   const std::vector<DVector> &pts,
                   const DMatrix &V,
                   const std::string &filename)
 {
-    std::cout << "plotting attractor (latex pdf)" << std::endl;
+    std::cout << " plotting attractor" << std::endl;
 
     const int n = pts.size();
     const int dim = pts[0].dimension();

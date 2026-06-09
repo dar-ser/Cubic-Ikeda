@@ -16,18 +16,12 @@ std::vector<DVector> samplePoints(const IVector &rect, const DVector& x0);
 std::vector<DVector> iteratePoincare(const std::vector<DVector> &sample,
                                     DPoincareMap &pm, int iterations);
 
-void plotSection3D(const std::vector<DVector> &pts,
-                   const DMatrix& V);
-
-void plotColouredSection3D(DPoincareMap &pm, const std::vector<DVector> &pts, DMatrix& V);
-// void plotDiagram(DPoincareMap &pm, const std::vector<DVector> &pts, DMatrix &V);
 void plotDiagram(DPoincareMap &pm, 
                 const std::vector<DVector> &pts,
                 const DMatrix &V, 
                 std::vector<IVector>& candidates);
 
-
-void plotForLatex(DPoincareMap &pm,
+void plotAttractor(DPoincareMap &pm,
                   const std::vector<DVector> &pts,
                   const DMatrix &V,
                   const std::string &filename);

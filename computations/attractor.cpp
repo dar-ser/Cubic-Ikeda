@@ -1,6 +1,6 @@
 #include "attractor.h"
 
-void getAttractor(DTimeMap timeMap, DVector start,
+void computeAttractorPoints(DTimeMap timeMap, DVector start,
                       double time, double skip, const string& filename) {
   DTimeMap::SolutionCurve solution(0.);
   timeMap(skip, start, solution);

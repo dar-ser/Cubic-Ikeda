@@ -9,7 +9,7 @@ CAPDFLAGS  = $(shell $(CAPDBINDIR)capd-config --cflags)
 CAPDLIBS   = $(shell $(CAPDBINDIR)capd-config --libs)
 
 # ── compiler ──────────────────────────────────────────────────────────────────
-CXXFLAGS += $(CAPDFLAGS) -O2 -std=c++17 -Icomputations  -I/mnt/c/Users/darin/Documents/Studia/eigen-5.0.0
+CXXFLAGS += $(CAPDFLAGS) -O2 -std=c++17 -Icomputations  -I/mnt/c/Users/darin/Documents/Studia/eigen-5.0.0 # -I/mnt/c/Users/darin/Documents/Studia/CAPD/
 
 # ── directories ──────────────────────────────────────────────────────────────
 OBJDIR = .obj/
