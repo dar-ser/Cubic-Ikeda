@@ -47,8 +47,9 @@ DVector getCandidate(DMap &map, DPoincareMap &pm, int n, double aStart, double a
 
     DVector candidate = getZero(pm, start, precision);
 
-    // the point is to look for fixed points higher (so more chaotic) parameter a values
-    // by starting at the last calculated fixed point, which is close to the new fixed point 
+    // the point is to implement the algorithm that computes the continuation of fixed points
+    // by starting computation of the new one
+    // at the last calculated fixed point, which is close to the new fixed point 
     double a = aStart;
     while (a < aEnd)
     {
@@ -62,7 +63,6 @@ DVector getCandidate(DMap &map, DPoincareMap &pm, int n, double aStart, double a
     candidate = getZero(pm, candidate, precision); 
 
     map.setParameters({entry_a});
-    cout << candidate << " " << pm(candidate) << endl;
     return candidate;
 }
 

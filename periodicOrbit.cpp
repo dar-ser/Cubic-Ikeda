@@ -102,10 +102,8 @@ int main()
               [](double i, double j){ return abs(i) > abs(j); });
 
     cout << endl
-         << "real part of eigenvalues:\n"
-         << eigenRealPart << endl
-         << "imaginary part of eigenvalues:\n"
-         << eigenImPart << endl
+         << "real part of eigenvalues:\n" << eigenRealPart << endl
+         << "imaginary part of eigenvalues:\n" << eigenImPart << endl
          << endl;
     /* so we see that we only have real eigenvalues :) */
 
@@ -154,7 +152,7 @@ int main()
     for (int i = 0; i < n; i++)
         C[i][0] = 0;
 
-    cout << "B:\n" << C << endl
+    cout << "C:\n" << C << endl << endl
          << "A:\n" << A << endl;
 
     // defining the set s
