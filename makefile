@@ -3,13 +3,13 @@ PROGS   = periodicOrbit # generateImages
 OTHERS  = computations/bifurcation computations/pseudospectral computations/newton computations/cover computations/attractor computations/pca
 
 # ── CAPD ──────────────────────────────────────────────────────────────────────
-CAPDBINDIR =
+CAPDBINDIR = external/capd/build/bin/
 CAPDCXX   := $(shell $(CAPDBINDIR)capd-config --variable=capd_cxx)
 CAPDFLAGS  = $(shell $(CAPDBINDIR)capd-config --cflags)
 CAPDLIBS   = $(shell $(CAPDBINDIR)capd-config --libs)
 
 # ── compiler ──────────────────────────────────────────────────────────────────
-CXXFLAGS += $(CAPDFLAGS) -O2 -std=c++17 -Icomputations  -I/mnt/c/Users/darin/Documents/Studia/eigen-5.0.0 # -I/mnt/c/Users/darin/Documents/Studia/CAPD/
+CXXFLAGS += $(CAPDFLAGS) -O2 -std=c++17 -Icomputations  -I/mnt/c/Users/darin/Documents/Studia/eigen-5.0.0
 
 # ── directories ──────────────────────────────────────────────────────────────
 OBJDIR = .obj/
@@ -23,7 +23,7 @@ OBJ_FILES  = $(OTHERS_OBJ) $(PROGS:%=$(OBJDIR)%.o)
 # ── build all programs ───────────────────────────────────────────────────────
 all: $(PROGS:%=output/%)
 
-# ── linking rule (CAPD standard) ─────────────────────────────────────────────
+# ── linking rule  ────────────────────────────────────────────────────────────
 output/%: $(OBJDIR)%.o $(OTHERS_OBJ)
 	@mkdir -p output
 	$(CAPDCXX) -o $@ $< $(OTHERS_OBJ) $(CAPDLIBS)
