@@ -69,8 +69,8 @@ int main()
     // making sure it's close to the attractor
     DTimeMap timeMap(solver);
     DTimeMap::SolutionCurve solution(0.);
-    timeMap(200., x, solution);
-    x = solution(200.);
+    timeMap(500., x, solution);
+    x = solution(500.);
 
     // plots approximated attractor
     double aStart = 1.5;
@@ -95,8 +95,9 @@ int main()
 
     /* PLOTTING BIFURCATION DIAGRAM */
     // warning: it will take a while
-    computeBifurcationDiagram(CubicIkeda, pm, x, aStart, aEnd, aFrequency, noSteps, "output/bifurcationData.dat");
-    plotBifurcationDiagram("output/bifurcationData.dat", "images/bifurcation.png", aStart, aEnd, aChaotic);
+    // uncomment first to compute, second to plot (after it has been computed)
+    // computeBifurcationDiagram(CubicIkeda, pm, x, aStart, aEnd, aFrequency, noSteps, "output/bifurcationData.dat");
+    // plotBifurcationDiagram("output/bifurcationData.dat", "images/bifurcation.png", aStart, aEnd, aChaotic);
 
 
     /* SETTING UP FOR PCA AND ATTRACTOR IN NEW COORDINATES */

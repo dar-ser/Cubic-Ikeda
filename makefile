@@ -1,5 +1,5 @@
 # ── project ──────────────────────────────────────────────────────────────────
-PROGS   = generateImages # visual # periodicOrbit 
+PROGS   = periodicOrbit # generateImages 
 OTHERS  = computations/bifurcation computations/pseudospectral computations/newton computations/cover computations/attractor computations/pca
 
 # ── CAPD ──────────────────────────────────────────────────────────────────────
@@ -38,9 +38,8 @@ $(OBJ_FILES): $(OBJDIR)%.o : %.cpp
 
 # ── run ──────────────────────────────────────────────────────────────────────
 run: all
-	./output/generateImages
-# 	./output/periodicOrbit
-# 	./output/visual
+	./output/periodicOrbit
+# 	./output/generateImages
 
 # ── clean ────────────────────────────────────────────────────────────────────
 clean:

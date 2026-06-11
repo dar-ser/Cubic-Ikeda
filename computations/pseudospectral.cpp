@@ -61,37 +61,32 @@ DMatrix compute_approxMatrix( double tau, int n, string filename)
 void plot_chebyshev_nodes(int N, double tau,
                           const char* output = "images/chebyshev_nodes.pdf")
 {
-    FILE* f = popen("gnuplot", "w");
-    if (!f)
+    FILE* gp = popen("gnuplot -persistent", "w");
+    if (!gp)
         throw std::runtime_error("popen failed");
 
-    auto gp = [&](const char* fmt, auto... args)
-    {
-        std::fprintf(f, fmt, args...);
-    };
-
     // terminal & output
-    gp("set terminal pdfcairo enhanced color font 'Palatino,15' size 14cm,9cm\n");
-    gp("set output '%s'\n", output);
+    fprintf(gp, "set terminal pdfcairo enhanced color font 'Palatino,15' size 14cm,9cm\n");
+    fprintf(gp, "set output '%s'\n", output);
 
     // appearance
-    gp("set style line 1 lc rgb '#2166AC' lw 2.2 dt 1\n");
-    gp("set style line 2 lc rgb '#D73027' pt 7 ps 1.4\n");
-    gp("set style line 3 lc rgb '#DDDDDD' lt 1 lw 0.4\n");
+    fprintf(gp, "set style line 1 lc rgb '#2166AC' lw 2.2 dt 1\n");
+    fprintf(gp, "set style line 2 lc rgb '#D73027' pt 7 ps 1.4\n");
+    fprintf(gp, "set style line 3 lc rgb '#DDDDDD' lt 1 lw 0.4\n");
 
-    gp("set grid ls 3\n");
-    gp("set border lw 1.2\n");
-    gp("set tics nomirror out\n");
-    gp("set key off\n");
+    fprintf(gp, "set grid ls 3\n");
+    fprintf(gp, "set border lw 1.2\n");
+    fprintf(gp, "set tics nomirror out\n");
+    fprintf(gp, "set key off\n");
 
-    gp("set xlabel 'k' font 'Palatino,15' offset 0,-0.5\n");
-    gp("set ylabel 's_k' font 'Palatino,15' offset -0.5,0\n");
+    fprintf(gp, "set xlabel 'k' font 'Palatino,15' offset 0,-0.5\n");
+    fprintf(gp, "set ylabel 's_k' font 'Palatino,15' offset -0.5,0\n");
 
     // variables
-    gp("tau = %.17g\n", tau);
-    gp("N   = %d\n", N);
-    gp("s(x) = tau/2.0 * (cos(pi*x/N) - 1.0)\n");
-    gp("set xrange [-0.5 : N+0.5]\n");
+    fprintf(gp, "tau = %.17g\n", tau);
+    fprintf(gp, "N   = %d\n", N);
+    fprintf(gp, "s(x) = tau/2.0 * (cos(pi*x/N) - 1.0)\n");
+    fprintf(gp, "set xrange [-0.5 : N+0.5]\n");
 
     // data block
     std::string data;
@@ -104,11 +99,11 @@ void plot_chebyshev_nodes(int N, double tau,
         data += buf;
     }
 
-    gp("$nodes << EOD\n%sEOD\n", data.c_str());
+    fprintf(gp, "$nodes << EOD\n%sEOD\n", data.c_str());
 
     // labels
-    gp("set label 1 's_0 = 0' at 0, s(0) left offset 1,-1 font 'Palatino,13' tc ls 2\n");
-    gp("set label 2 '-{/Symbol t} = s_N' at N, s(N) right offset -0.4,1.25 font 'Palatino,13' tc ls 2\n");
+    fprintf(gp, "set label 1 's_0 = 0' at 0, s(0) left offset 1,-1 font 'Palatino,13' tc ls 2\n");
+    fprintf(gp, "set label 2 '-{/Symbol t} = s_N' at N, s(N) right offset -0.4,1.25 font 'Palatino,13' tc ls 2\n");
 
     int id = 3;
     for (int k = 1; k < N; ++k)
@@ -118,16 +113,18 @@ void plot_chebyshev_nodes(int N, double tau,
         double xoff = (k == 1 || k == N - 1) ? 0.0 : 0.5;
         double yoff = (k == 1) ? -1.6 : 1.3;
 
-        gp("set label %d '%.4f' at %d, %.17g center offset %.1f, %.1f "
-           "font 'Palatino,12' tc rgb '#555555'\n",
-           id++, sk, k, sk, xoff, yoff);
+        fprintf(gp,
+                "set label %d '%.4f' at %d, %.17g center offset %.1f, %.1f "
+                "font 'Palatino,12' tc rgb '#555555'\n",
+                id++, sk, k, sk, xoff, yoff);
     }
 
     // plot
-    gp("plot [0:N] "
-       "s(x) w l ls 1, "
-       "$nodes u 1:2 w p ls 2\n");
+    fprintf(gp,
+            "plot [0:N] "
+            "s(x) w l ls 1, "
+            "$nodes u 1:2 w p ls 2\n");
 
-    std::fflush(f);
-    pclose(f);
+    fflush(gp);
+    pclose(gp);
 }
