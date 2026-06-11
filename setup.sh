@@ -3,7 +3,7 @@ set -e
 
 echo "=== Installing system dependencies ==="
 sudo apt-get update
-sudo apt-get install -y build-essential cmake g++ libeigen3-dev
+sudo apt-get install -y build-essential cmake g++ libeigen3-dev gnuplot
 
 echo "=== Initializing CAPD submodule ==="
 git submodule update --init --recursive
