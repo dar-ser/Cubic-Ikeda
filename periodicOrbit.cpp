@@ -111,8 +111,8 @@ int main()
 
     
     // definition of the interval set centred around periodicPoint
-    // given by  x0 + B * r
-    // where B - the basis transformation matrix for the set
+    // is given by  x0 + C * r
+    // where C - the basis transformation matrix for the set
     //   and A - the basis transformation matrix for the Poincare map's output
 
     // we define r specifically for n = 7 
@@ -132,33 +132,33 @@ int main()
 
     // the basis transformation matrices are defined using the eigenvectors computed before 
     // with f(x0)/||f(x0)|| in the first column for A^{-1}
-    // and zeros in the first column for B
-    IMatrix B(n, n);
+    // and zeros in the first column for C
+    IMatrix C(n, n);
     auto fx0 = ICubicIkeda(x0);
     fx0.normalize();
 
-    B[0][0] = fx0[0];
+    C[0][0] = fx0[0];
     for (int i = 1; i < n; i++)
     {
-        B[i][0] = fx0[i];
-        B[0][i] = 0;
+        C[i][0] = fx0[i];
+        C[0][i] = 0;
         auto vec = eigenVectors[eigenRealPart[i - 1]];
         vec.normalize();
         for (int j = 1; j < n; j++)
-            B[j][i] = vec[j-1];
+            C[j][i] = vec[j-1];
     }
 
-    IMatrix A = matrixAlgorithms::gaussInverseMatrix(B);
+    IMatrix A = matrixAlgorithms::gaussInverseMatrix(C);
 
     // for more precise computation we ensure that the set is contained in the section
     for (int i = 0; i < n; i++)
-        B[i][0] = 0;
+        C[i][0] = 0;
 
-    cout << "B:\n" << B << endl
+    cout << "B:\n" << C << endl
          << "A:\n" << A << endl;
 
     // defining the set s
-    C1Rect2Set s(x0, B, r);
+    C1Rect2Set s(x0, C, r);
 
     // defining interval Poincare map
     IOdeSolver ISolver(ICubicIkeda, taylorOrder);
@@ -169,18 +169,15 @@ int main()
 
     // computing P(s) in coordinates given by A
     IVector P0 = IPm(s, x0, A, IReturnTime);
-
-    // by the theory of computing Poincare maps
+    
     // we know that P0 contains the set P(r) 
-    cout << "r: " << r << endl
-         << endl;
-    cout << "P0: " << P0 << endl
-         << endl;
+    cout << endl << "r: " << r << endl;
+    cout << "P0: " << P0 << endl << endl;
 
     cout << "checking covering relations:\n";
-
-    bool cover = checkSelfCover(IPm, A, B, r, x0);
-
     cout << std::boolalpha;
+
+    bool cover = checkSelfCover(IPm, A, C, r, x0);
+
     cout << "covering : " << cover << endl;
 }

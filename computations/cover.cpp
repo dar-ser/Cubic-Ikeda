@@ -1,7 +1,7 @@
 #include "cover.h"
 #include "newton.h"
 
-bool checkSelfCover(IPoincareMap IPm, const IMatrix& A, const IMatrix& B, const IVector& r, const IVector& x0){
+bool checkSelfCover(IPoincareMap IPm, const IMatrix& A, const IMatrix& C, const IVector& r, const IVector& x0){
     int N = x0.dimension()-1;
     
     // we need to check :
@@ -13,8 +13,8 @@ bool checkSelfCover(IPoincareMap IPm, const IMatrix& A, const IMatrix& B, const 
 
     // to answear the first question we need to define new centre points x0_left, x0_right
     // and new rectangles r_left_inter, r_right_inter for sets:
-    //  s_left = x0_left + B * r_left_inter
-    //  s_right = x0_right + B * r_right_inter
+    //  s_left = x0_left + C * r_left_inter
+    //  s_right = x0_right + C * r_right_inter
 
     IVector r_left(N + 1), r_left_point(N + 1), r_left_inter(N + 1);
     r_left[0] = r_left_point[0] = r_left_inter[0] = 0;
@@ -34,21 +34,21 @@ bool checkSelfCover(IPoincareMap IPm, const IMatrix& A, const IMatrix& B, const 
         r_right_point[i] = 0;
     }
 
-    IVector x0_left = x0 + B * r_left_point;
+    IVector x0_left = x0 + C * r_left_point;
     
     x0_left[0] = 0;
     interval IReturnTime = 0;
     
-    C0Rect2Set s_left(x0_left, B, r_left_inter);
+    C0Rect2Set s_left(x0_left, C, r_left_inter);
     IVector P0_left = IPm(s_left, x0, A, IReturnTime);
     
     
-    IVector x0_right = x0 + B * r_right_point;
+    IVector x0_right = x0 + C * r_right_point;
     
     x0_right[0] = 0;
     IReturnTime = 0;
     
-    C0Rect2Set s_right(x0_right, B, r_right_inter);
+    C0Rect2Set s_right(x0_right, C, r_right_inter);
     IVector P0_right = IPm(s_right, x0, A, IReturnTime);   
 
 
@@ -56,10 +56,10 @@ bool checkSelfCover(IPoincareMap IPm, const IMatrix& A, const IMatrix& B, const 
 
     bool leftCovering = P0_left[1].rightBound() < r[1].leftBound() ? true : false;
     bool rightCovering = r[1].rightBound() < P0_right[1].leftBound() ? true : false;
-    cout << "Left covering: " << P0_left[1].rightBound() << " < " << r[1].leftBound() << " : " << leftCovering << endl;
-    cout << "Right covering: " << r[1].rightBound() << " < " << P0_right[1].leftBound() << " : " << rightCovering << endl;
+    cout << "\tleft covering: " << P0_left[1].rightBound() << " < " << r[1].leftBound() << " : " << leftCovering << endl;
+    cout << "\tright covering: " << r[1].rightBound() << " < " << P0_right[1].leftBound() << " : " << rightCovering << endl;
     
-    C0Rect2Set s(x0, B, r);
+    C0Rect2Set s(x0, C, r);
     IVector P0 = IPm(s, x0, A, IReturnTime);
     
     
@@ -158,7 +158,6 @@ void plotRectangles(
             xmin - xpad, xmax + xpad,
             ymin - ypad, ymax + ypad);
 
-        // Remove tick labels (but keep tick marks/grid structure)
         fprintf(gp,
             "set format x ''\n"
             "set format y ''\n");
