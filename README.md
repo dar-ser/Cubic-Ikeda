@@ -1,6 +1,6 @@
 # DDE Computer-Assisted Proof Project (CAPD)
 
-This project implements computer-assisted proofs of periodic orbits for delay differential equations using CAPD and Eigen.
+This project implements computer-assisted proofs of periodic orbits for the Cubic Ikeda (a delay differential equation) using CAPD.
 
 ## Structure
 
@@ -9,7 +9,6 @@ This project implements computer-assisted proofs of periodic orbits for delay di
 - `computations/` – shared implementation (.cpp + .h together, CAPD-safe)
 - `external/capd/` – CAPD library (git submodule)
 - `output/` – generated results
-- `.obj/` – compiled objects
 
 ## Dependencies
 
