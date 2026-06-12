@@ -23,6 +23,7 @@ This project implements computer-assisted proofs of periodic orbits for the Cubi
 
 ## Quick Start
 
+To download and run the code it is enough to do the following in bash on Linux:
 ```bash
 git clone --recurse-submodules https://github.com/dar-ser/Cubic-Ikeda.git
 cd Cubic-Ikeda
