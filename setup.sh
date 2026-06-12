@@ -3,7 +3,7 @@ set -e
 
 echo "=== Installing system dependencies ==="
 sudo apt-get update
-sudo apt-get install -y build-essential cmake g++ libeigen3-dev gnuplot
+sudo apt-get install -y build-essential cmake g++ libeigen3-dev gnuplot libqt5core5a libqt5gui5 libqt5widgets5
 
 echo "=== Initializing CAPD submodule ==="
 git submodule update --init --recursive
