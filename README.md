@@ -13,7 +13,7 @@ This project implements computer-assisted proofs of periodic orbits for the Cubi
   - `pca.h/.cpp` – Principal component analysis and plotting utilities for the attractor in new coordinates: `mainDirections`, `samplePoints`/`iteratePoincare`, and gnuplot-based 3D visualization (`plotAttractor`).
   - `cover.h/.cpp` – Covering relation checks for the computer-assisted proof (rigorous interval arithmetic verification of set coverings under the Poincaré map).
   - `bifurcation.h/.cpp` – Bifurcation diagram computation for the Cubic Ikeda map over a range of parameter values.
-- `output/` – generated results
+- `output/` – Data generated during program execution 
 
 ## Dependencies
 
